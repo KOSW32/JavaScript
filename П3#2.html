@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>П3#2</title>
+</head>
+<body>
+
+<script>
+
+
+let rect = {
+    x1: 2,  
+    y1: 8,
+    x2: 12, 
+    y2: 2
+};
+
+// 1
+function showRect(r) {
+    console.log("Ліва верхня точка: (" + r.x1 + "; " + r.y1 + ")");
+    console.log("Права нижня точка: (" + r.x2 + "; " + r.y2 + ")");
+}
+
+// 2
+function getWidth(r) {
+    return r.x2 - r.x1;
+}
+
+// 3
+function getHeight(r) {
+    return r.y1 - r.y2;
+}
+
+// 4
+function getArea(r) {
+    return getWidth(r) * getHeight(r);
+}
+
+// 5
+function getPerimeter(r) {
+    return 2 * (getWidth(r) + getHeight(r));
+}
+
+// 6
+function changeWidth(r, value) {
+    r.x2 += value;
+}
+
+// 7
+function changeHeight(r, value) {
+    r.y2 -= value;
+}
+
+// 8
+function changeSize(r, widthValue, heightValue) {
+    changeWidth(r, widthValue);
+    changeHeight(r, heightValue);
+}
+
+// 9
+function moveX(r, value) {
+    r.x1 += value;
+    r.x2 += value;
+}
+
+// 10
+function moveY(r, value) {
+    r.y1 += value;
+    r.y2 += value;
+}
+
+// 11
+function moveXY(r, x, y) {
+    moveX(r, x);
+    moveY(r, y);
+}
+
+// 12
+function isPointInside(r, x, y) {
+    if (
+        x >= r.x1 &&
+        x <= r.x2 &&
+        y <= r.y1 &&
+        y >= r.y2
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+showRect(rect);
+
+console.log("Ширина:", getWidth(rect));
+console.log("Висота:", getHeight(rect));
+console.log("Площа:", getArea(rect));
+console.log("Периметр:", getPerimeter(rect));
+
+changeWidth(rect, 3);
+changeHeight(rect, 2);
+
+console.log("Після зміни розмірів:");
+showRect(rect);
+
+moveXY(rect, 5, -2);
+
+console.log("Після зміщення:");
+showRect(rect);
+
+console.log("Точка (10;5):", isPointInside(rect, 10, 5));
+
+</script>
+
+</body>
+</html>

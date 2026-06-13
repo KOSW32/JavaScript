@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>П3#3</title>
+</head>
+<body>
+
+<script>
+
+// 1
+class PrintMaсhine
+{
+    constructor(size, color, font)
+    {
+        this.size = size;
+        this.color = color;
+        this.font = font;
+    }
+
+    print(text)
+    {
+        document.write("<p style='font-size:" + this.size + "px; color:" + this.color + "; font-family:" + this.font + "'>" + text + "</p>");
+    }
+}
+
+let pm = new PrintMaсhine(18, "blue", "Arial");
+pm.print("Привіт");
+pm.print("Тест текст");
+
+
+// 2
+class News
+{
+    constructor(title, text, tags, date)
+    {
+        this.title = title;
+        this.text = text;
+        this.tags = tags;
+        this.date = new Date(date);
+    }
+
+    print()
+    {
+        let now = new Date();
+        let diff = now - this.date;
+        let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        let outDate = "";
+
+        if (days == 0)
+        {
+            outDate = "сьогодні";
+        }
+        else if (days < 7)
+        {
+            outDate = days + " дні тому";
+        }
+        else
+        {
+            outDate = this.date.getDate() + "." + (this.date.getMonth() + 1) + "." + this.date.getFullYear();
+        }
+
+        document.write("<h3>" + this.title + "</h3>");
+        document.write("<p>" + this.text + "</p>");
+        document.write("<p>теги: " + this.tags + "</p>");
+        document.write("<p>" + outDate + "</p>");
+        document.write("<hr>");
+    }
+}
+
+
+// 3
+class NewsFeed
+{
+    constructor()
+    {
+        this.news = [];
+    }
+
+    get count()
+    {
+        return this.news.length;
+    }
+
+    add(n)
+    {
+        this.news.push(n);
+    }
+
+    remove(i)
+    {
+        this.news.splice(i, 1);
+    }
+
+    show()
+    {
+        for (let i = 0; i < this.news.length; i++)
+        {
+            this.news[i].print();
+        }
+    }
+
+    sort()
+    {
+        this.news.sort((a, b) => b.date - a.date);
+    }
+
+    find(tag)
+    {
+        let res = [];
+
+        for (let i = 0; i < this.news.length; i++)
+        {
+            if (this.news[i].tags.indexOf(tag) != -1)
+            {
+                res.push(this.news[i]);
+            }
+        }
+
+        return res;
+    }
+}
+
+
+// DEMO
+
+let n1 = new News("Новина 1", "Текст 1", ["js", "html"], "2026-06-12");
+let n2 = new News("Новина 2", "Текст 2", ["css"], "2026-06-08");
+let n3 = new News("Новина 3", "Текст 3", ["js"], "2026-06-01");
+
+let feed = new NewsFeed();
+
+feed.add(n1);
+feed.add(n2);
+feed.add(n3);
+
+feed.show();
+
+console.log("кількість:", feed.count);
+
+feed.sort();
+
+console.log("після сортування:");
+feed.show();
+
+console.log(feed.find("js"));
+
+</script>
+
+</body>
+</html>

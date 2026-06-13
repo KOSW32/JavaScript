@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ПЗ#1</title>
+</head>
+<body>
+
+<script>
+
+// 1
+let n = prompt("Введіть число");
+alert(n * n);
+
+// 2
+let a = +prompt("Перше число");
+let b = +prompt("Друге число");
+alert((a + b) / 2);
+
+// 3
+let side = +prompt("Сторона квадрата");
+alert(side * side);
+
+// 4
+const mile = 0.621371;
+let km = +prompt("Кілометри");
+alert(km * mile);
+
+// 5
+let num1 = +prompt("Перше число");
+let num2 = +prompt("Друге число");
+
+alert("Сума: " + (num1 + num2));
+alert("Різниця: " + (num1 - num2));
+alert("Добуток: " + (num1 * num2));
+alert("Частка: " + (num1 / num2));
+
+// 6
+let aa = +prompt("Введіть a");
+let bb = +prompt("Введіть b");
+
+let xx = -bb / aa;
+
+alert("x = " + xx);
+
+// 7
+let h = +prompt("Години");
+let m = +prompt("Хвилини");
+
+let hoursLeft = 23 - h;
+let minutesLeft = 60 - m;
+
+if (minutesLeft == 60)
+{
+    minutesLeft = 0;
+}
+else
+{
+    hoursLeft--;
+}
+
+alert("Залишилось " + hoursLeft + " год. " + minutesLeft + " хв.");
+
+// 8
+let num = +prompt("Тризначне число");
+
+let digit = Math.floor(num % 100 / 10);
+
+alert(digit);
+
+// 9
+let number = prompt("П'ятизначне число");
+
+let last = number[number.length - 1];
+
+let newNumber = last + number.substring(0, 4);
+
+alert(newNumber);
+
+// 10
+let sale = +prompt("Сума продажів");
+
+let salary = 250 + sale * 0.1;
+
+alert("Зарплата = $" + salary);
+
+</script>
+
+</body>
+</html>

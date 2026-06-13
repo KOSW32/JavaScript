@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>дз№2</title>
+</head>
+<body>
+
+<h2></h2>
+
+<script>
+// 1.  
+let a = +prompt("Введите начало диапазона");
+let b = +prompt("Введите конец диапазона");
+let sum = 0;
+
+for (let i = a; i <= b; i++) {
+    sum += i;
+}
+console.log("Сумма диапазона:", sum);
+
+
+// 2. НОД (while)
+let x = +prompt("Первое число для НОД");
+let y = +prompt("Второе число для НОД");
+
+while (x !== y) {
+    if (x > y) x = x - y;
+    else y = y - x;
+}
+console.log("НОД:", x);
+
+
+// 3. 
+let n = +prompt("Введите число для делителей");
+
+for (let i = 1; i <= n; i++) {
+    if (n % i === 0) console.log("Делитель:", i);
+}
+
+
+// 4. Количество цифр (while)
+let num = +prompt("Введите число для подсчета цифр");
+let count = 0;
+let temp = Math.abs(num);
+
+while (temp > 0) {
+    temp = Math.floor(temp / 10);
+    count++;
+}
+console.log("Количество цифр:", count);
+
+
+// 5. 10 чисел (for)
+let positive = 0, negative = 0, zero = 0;
+let even = 0, odd = 0;
+
+for (let i = 1; i <= 10; i++) {
+    let val = +prompt("Введите число " + i);
+
+    if (val > 0) positive++;
+    else if (val < 0) negative++;
+    else zero++;
+
+    if (val % 2 === 0) even++;
+    else odd++;
+}
+
+console.log("Положительные:", positive);
+console.log("Отрицательные:", negative);
+console.log("Нули:", zero);
+console.log("Четные:", even);
+console.log("Нечетные:", odd);
+
+
+// 6. 
+let again;
+
+do {
+    let n1 = +prompt("Первое число");
+    let op = prompt("Оператор (+ - * /)");
+    let n2 = +prompt("Второе число");
+    let res;
+
+    if (op === "+") res = n1 + n2;
+    else if (op === "-") res = n1 - n2;
+    else if (op === "*") res = n1 * n2;
+    else if (op === "/") res = n1 / n2;
+
+    alert("Результат: " + res);
+
+    again = confirm("Еще пример?");
+} while (again);
+
+
+// 7. 
+let number = prompt("Введите число");
+let shift = +prompt("На сколько сдвинуть");
+
+let arr = number.split("");
+shift = shift % arr.length;
+
+for (let i = 0; i < shift; i++) {
+    arr.push(arr.shift());
+}
+
+console.log("Результат сдвига:", arr.join("") );
+
+
+// 8.
+let days = ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"];
+let i = 0;
+
+while (true) {
+    alert(days[i]);
+
+    if (!confirm("Показать следующий день?")) break;
+
+    i = (i + 1) % 7;
+}
+
+
+// 9. Таблица умножения (for)
+for (let i = 2; i <= 9; i++) {
+    console.log("Число:", i);
+
+    for (let j = 1; j <= 10; j++) {
+        console.log(i + " x " + j + " = " + (i * j));
+    }
+}
+
+
+// 10. 
+let low = 0;
+let high = 100;
+let found = false;
+
+while (!found) {
+    let mid = Math.floor((low + high) / 2);
+
+    let answer = prompt("Ваше число > " + mid + ", < " + mid + " или == " + mid + "?");
+
+    if (answer === ">") low = mid + 1;
+    else if (answer === "<") high = mid - 1;
+    else if (answer === "==") {
+        found = true;
+        alert("Число найдено: " + mid);
+    }
+}
+
+</script>
+
+</body>
+</html>
