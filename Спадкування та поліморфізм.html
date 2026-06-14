@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>дз№4</title>
+</head>
+<body>
+
+<script>
+
+//1
+
+class Marker {
+
+    constructor(color, ink) {
+        this.color = color;
+        this.ink = ink;
+    }
+
+    print(text) {
+
+        let result = "";
+
+        for(let i = 0; i < text.length; i++) {
+
+            if(this.ink <= 0) {
+                break;
+            }
+
+            result += text[i];
+
+            if(text[i] != " ") {
+                this.ink = this.ink - 0.5;
+            }
+        }
+
+        document.write("<p style='color:" + this.color + "'>" + result + "</p>");
+        document.write("Чорнила: " + this.ink + "%<br><br>");
+    }
+}
+
+class RefillableMarker extends Marker {
+
+    refill(count) {
+
+        this.ink = this.ink + count;
+
+        if(this.ink > 100) {
+            this.ink = 100;
+        }
+    }
+}
+
+document.write("<h2>Завдання 1</h2>");
+
+let marker = new RefillableMarker("red", 10);
+
+marker.print("Це текст який друкує маркер.");
+
+marker.refill(40);
+
+document.write("Після заправки:<br>");
+
+marker.print("Маркер знову може друкувати текст.");
+
+
+//2
+
+class ExtendedDate extends Date {
+
+    showDate() {
+
+        let months = [
+            "січня",
+            "лютого",
+            "березня",
+            "квітня",
+            "травня",
+            "червня",
+            "липня",
+            "серпня",
+            "вересня",
+            "жовтня",
+            "листопада",
+            "грудня"
+        ];
+
+        return this.getDate() + " " + months[this.getMonth()];
+    }
+
+    checkDate() {
+
+        let now = new Date();
+
+        if(this >= now) {
+            return true;
+        }
+
+        return false;
+    }
+
+    checkLeapYear() {
+
+        let year = this.getFullYear();
+
+        if(year % 400 == 0) {
+            return true;
+        }
+
+        if(year % 4 == 0 && year % 100 != 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    nextDate() {
+
+        let d = new ExtendedDate(this);
+
+        d.setDate(d.getDate() + 1);
+
+        return d;
+    }
+}
+
+document.write("<h2>Завдання 2</h2>");
+
+let date = new ExtendedDate();
+
+document.write("Дата текстом: " + date.showDate() + "<br>");
+document.write("Не минула дата: " + date.checkDate() + "<br>");
+document.write("Високосний рік: " + date.checkLeapYear() + "<br>");
+document.write("Наступна дата: " + date.nextDate().toLocaleDateString() + "<br><br>");
+
+
+//3
+
+class Employee {
+
+    constructor(id, name, position, salary) {
+
+        this.id = id;
+        this.name = name;
+        this.position = position;
+        this.salary = salary;
+    }
+}
+
+class EmpTable {
+
+    constructor(arr) {
+        this.arr = arr;
+    }
+
+    getHtml() {
+
+        let html = "";
+
+        html += "<table border='1'>";
+        html += "<tr>";
+        html += "<th>ID</th>";
+        html += "<th>Ім'я</th>";
+        html += "<th>Посада</th>";
+        html += "<th>Зарплата</th>";
+        html += "</tr>";
+
+        for(let i = 0; i < this.arr.length; i++) {
+
+            html += "<tr>";
+
+            html += "<td>" + this.arr[i].id + "</td>";
+            html += "<td>" + this.arr[i].name + "</td>";
+            html += "<td>" + this.arr[i].position + "</td>";
+            html += "<td>" + this.arr[i].salary + "</td>";
+
+            html += "</tr>";
+        }
+
+        html += "</table>";
+
+        return html;
+    }
+}
+
+let workers = [];
+
+workers.push(new Employee(1,"Іван","Менеджер",25000));
+workers.push(new Employee(2,"Олена","Касир",18000));
+workers.push(new Employee(3,"Андрій","Аналітик",30000));
+
+document.write("<h2>Завдання 3</h2>");
+
+let table = new EmpTable(workers);
+
+document.write(table.getHtml());
+
+document.write("<br><br>");
+
+
+//4
+
+class StyledEmpTable extends EmpTable {
+
+    getStyles() {
+
+        let css = "";
+
+        css += "<style>";
+
+        css += "table{";
+        css += "border-collapse:collapse;";
+        css += "width:600px;";
+        css += "}";
+
+        css += "th,td{";
+        css += "border:1px solid black;";
+        css += "padding:10px;";
+        css += "text-align:center;";
+        css += "}";
+
+        css += "th{";
+        css += "background:lightgray;";
+        css += "}";
+
+        css += "</style>";
+
+        return css;
+    }
+
+    getHtml() {
+
+        return this.getStyles() + super.getHtml();
+    }
+}
+
+document.write("<h2>Завдання 4</h2>");
+
+let styledTable = new StyledEmpTable(workers);
+
+document.write(styledTable.getHtml());
+
+</script>
+
+</body>
+</html>

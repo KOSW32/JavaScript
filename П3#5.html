@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>П3#5</title>
+</head>
+<body>
+
+<script>
+
+//1
+
+class Button {
+    constructor(w, h, text) {
+        this.w = w;
+        this.h = h;
+        this.text = text;
+    }
+
+    showBtn() {
+        document.write(`<button style="width:${this.w}px;height:${this.h}px;">
+            ${this.text}
+        </button> <br>`);
+    }
+}
+
+class BootstrapButton extends Button {
+    constructor(w, h, text, color) {
+        super(w, h, text);
+        this.color = color;
+    }
+
+    showBtn() {
+        document.write(`<button style="width:${this.w}px;height:${this.h}px;background:${this.color};color:white;">
+            ${this.text}
+        </button> <br>`);
+    }
+}
+
+//2
+
+class Figure {
+    getName() {
+        return "figure";
+    }
+
+    info() {
+        console.log("figure");
+    }
+
+    area() {
+        return 0;
+    }
+
+    perim() {
+        return 0;
+    }
+}
+
+class Square extends Figure {
+    constructor(a) {
+        super();
+        this.a = a;
+    }
+
+    getName() {
+        return "square";
+    }
+
+    info() {
+        console.log("square side:", this.a);
+    }
+
+    area() {
+        return this.a * this.a;
+    }
+
+    perim() {
+        return this.a * 4;
+    }
+}
+
+class Rectangle extends Figure {
+    constructor(a, b) {
+        super();
+        this.a = a;
+        this.b = b;
+    }
+
+    getName() {
+        return "rectangle";
+    }
+
+    info() {
+        console.log("rectangle:", this.a, this.b);
+    }
+
+    area() {
+        return this.a * this.b;
+    }
+
+    perim() {
+        return (this.a + this.b) * 2;
+    }
+}
+
+class Triangle extends Figure {
+    constructor(a, b, c) {
+        super();
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+
+    getName() {
+        return "triangle";
+    }
+
+    info() {
+        console.log("triangle:", this.a, this.b, this.c);
+    }
+
+    area() {
+        let p = (this.a + this.b + this.c) / 2;
+        return Math.sqrt(p * (p - this.a) * (p - this.b) * (p - this.c));
+    }
+
+    perim() {
+        return this.a + this.b + this.c;
+    }
+}
+
+//3
+
+class ExtentedArray extends Array {
+
+    getString(sep) {
+        let str = "";
+        for (let i = 0; i < this.length; i++) {
+            str += this[i];
+            if (i < this.length - 1) str += sep;
+        }
+        return str;
+    }
+
+    getHtml(tag) {
+        let res = "";
+
+        if (tag === "li") {
+            res += "<ul>";
+            for (let i = 0; i < this.length; i++) {
+                res += "<li>" + this[i] + "</li>";
+            }
+            res += "</ul>";
+        } else {
+            for (let i = 0; i < this.length; i++) {
+                res += "<" + tag + ">" + this[i] + "</" + tag + ">";
+            }
+        }
+
+        return res;
+    }
+}
+
+// ----------- проверка -----------
+
+let b1 = new Button(120, 40, "Click");
+b1.showBtn();
+
+let b2 = new BootstrapButton(120, 40, "Color", "green");
+b2.showBtn();
+
+let arr = new ExtentedArray(1, 2, 3, 4);
+
+console.log(arr.getString(" - "));
+console.log(arr.getHtml("li"));
+
+let f = [
+    new Square(5),
+    new Rectangle(4, 6),
+    new Triangle(3, 4, 5)
+];
+
+for (let i = 0; i < f.length; i++) {
+    f[i].info();
+    console.log(f[i].area());
+    console.log(f[i].perim());
+    console.log("----");
+}
+
+</script>
+
+</body>
+</html>

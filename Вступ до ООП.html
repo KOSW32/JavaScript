@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>дз№5</title>
+</head>
+<body>
+
+<script>
+
+//1
+
+class Circle {
+    constructor(radius) {
+        this._radius = radius;
+    }
+
+    get radius() {
+        return this._radius;
+    }
+
+    set radius(value) {
+        this._radius = value;
+    }
+
+    get diameter() {
+        return this._radius * 2;
+    }
+
+    getArea() {
+        return Math.PI * this._radius * this._radius;
+    }
+
+    getLength() {
+        return 2 * Math.PI * this._radius;
+    }
+}
+
+document.write("<h1>Завдання 1</h1>");
+
+const circle = new Circle(10);
+
+document.write("Радіус: " + circle.radius + "<br>");
+document.write("Діаметр: " + circle.diameter + "<br>");
+document.write("Площа: " + circle.getArea().toFixed(2) + "<br>");
+document.write("Довжина кола: " + circle.getLength().toFixed(2) + "<hr>");
+
+
+//2
+
+class HtmlElement {
+    constructor(tagName, selfClosing = false, text = "") {
+        this.tagName = tagName;
+        this.selfClosing = selfClosing;
+        this.text = text;
+        this.attributes = {};
+        this.styles = {};
+        this.children = [];
+    }
+
+    setAttribute(name, value) {
+        this.attributes[name] = value;
+    }
+
+    setStyle(name, value) {
+        this.styles[name] = value;
+    }
+
+    appendElement(element) {
+        this.children.push(element);
+    }
+
+    prependElement(element) {
+        this.children.unshift(element);
+    }
+
+    getHtml() {
+
+        let attrs = "";
+
+        for (let key in this.attributes) {
+            attrs += ` ${key}="${this.attributes[key]}"`;
+        }
+
+        let styles = "";
+
+        for (let key in this.styles) {
+            styles += `${key}:${this.styles[key]};`;
+        }
+
+        if (styles !== "") {
+            attrs += ` style="${styles}"`;
+        }
+
+        if (this.selfClosing) {
+            return `<${this.tagName}${attrs}>`;
+        }
+
+        let html = `<${this.tagName}${attrs}>`;
+
+        html += this.text;
+
+        for (let child of this.children) {
+            html += child.getHtml();
+        }
+
+        html += `</${this.tagName}>`;
+
+        return html;
+    }
+}
+
+document.write("<h1>Завдання 2</h1>");
+
+const wrapper = new HtmlElement("div");
+wrapper.setAttribute("id", "wrapper");
+wrapper.setStyle("display", "flex");
+
+for (let i = 0; i < 2; i++) {
+
+    const block = new HtmlElement("div");
+    block.setStyle("width", "300px");
+    block.setStyle("margin", "10px");
+
+    const title = new HtmlElement(
+        "h3",
+        false,
+        "What is Lorem Ipsum?"
+    );
+
+    const img = new HtmlElement("img", true);
+    img.setAttribute("src", "https://picsum.photos/300/200");
+    img.setAttribute("alt", "Lorem Ipsum");
+    img.setStyle("width", "100%");
+
+    const p = new HtmlElement(
+        "p",
+        false,
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. "
+    );
+
+    p.setStyle("text-align", "justify");
+
+    const link = new HtmlElement(
+        "a",
+        false,
+        "More..."
+    );
+
+    link.setAttribute("href", "https://www.lipsum.com/");
+    link.setAttribute("target", "_blank");
+
+    p.appendElement(link);
+
+    block.appendElement(title);
+    block.appendElement(img);
+    block.appendElement(p);
+
+    wrapper.appendElement(block);
+}
+
+document.write(wrapper.getHtml());
+
+document.write("<hr>");
+
+
+//3
+class CssClass {
+
+    constructor(className) {
+        this.className = className;
+        this.styles = {};
+    }
+
+    setStyle(property, value) {
+        this.styles[property] = value;
+    }
+
+    removeStyle(property) {
+        delete this.styles[property];
+    }
+
+    getCss() {
+
+        let css = "." + this.className + "{";
+
+        for (let property in this.styles) {
+            css += property + ":" + this.styles[property] + ";";
+        }
+
+        css += "}";
+
+        return css;
+    }
+}
+
+document.write("<h1>Завдання 3</h1>");
+
+const myClass = new CssClass("box");
+
+myClass.setStyle("width", "300px");
+myClass.setStyle("padding", "15px");
+myClass.setStyle("border", "2px solid black");
+
+document.write("<pre>");
+document.write(myClass.getCss());
+document.write("</pre>");
+
+document.write("<hr>");
+
+
+
+//4
+
+
+class HtmlBlock {
+
+    constructor(rootElement) {
+        this.styles = [];
+        this.rootElement = rootElement;
+    }
+
+    addStyle(cssClass) {
+        this.styles.push(cssClass);
+    }
+
+    getCode() {
+
+        let code = "<style>";
+
+        for (let style of this.styles) {
+            code += style.getCss();
+        }
+
+        code += "</style>";
+
+        code += this.rootElement.getHtml();
+
+        return code;
+    }
+}
+
+document.write("<h1>Завдання 4</h1>");
+
+const root = new HtmlElement("div");
+root.setAttribute("class", "container");
+
+const text = new HtmlElement(
+    "h2",
+    false,
+    "HTML Block створений за допомогою HtmlBlock"
+);
+
+root.appendElement(text);
+
+const containerClass = new CssClass("container");
+
+containerClass.setStyle("width", "700px");
+containerClass.setStyle("margin", "20px auto");
+containerClass.setStyle("padding", "20px");
+containerClass.setStyle("border", "3px solid black");
+containerClass.setStyle("text-align", "center");
+
+const htmlBlock = new HtmlBlock(root);
+htmlBlock.addStyle(containerClass);
+
+document.write(htmlBlock.getCode());
+
+</script>
+
+</body>
+</html>

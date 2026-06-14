@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>П3#4</title>
+</head>
+<body>
+
+<script>
+
+//1
+
+class PrintMachine {
+    constructor(size, color, family) {
+        this.size = size;
+        this.color = color;
+        this.family = family;
+    }
+
+    print(text) {
+        document.write(
+            `<p style="font-size:${this.size}px; color:${this.color}; font-family:${this.family};">
+                ${text}
+            </p>`
+        );
+    }
+}
+
+let pm = new PrintMachine(20, "blue", "Arial");
+pm.print("Hello world, this is PrintMachine");
+
+
+//2
+
+class News {
+    constructor(title, text, tags, date) {
+        this.title = title;
+        this.text = text;
+        this.tags = tags;
+        this.date = new Date(date);
+    }
+
+    print() {
+        let now = new Date();
+        let diff = Math.floor((now - this.date) / (1000 * 60 * 60 * 24));
+
+        let dateText = "";
+
+        if (diff < 1) {
+            dateText = "сьогодні";
+        } else if (diff < 7) {
+            dateText = diff + " днів тому";
+        } else {
+            let d = this.date.getDate();
+            let m = this.date.getMonth() + 1;
+            let y = this.date.getFullYear();
+            dateText = d + "." + m + "." + y;
+        }
+
+        document.write("<h3>" + this.title + "</h3>");
+        document.write("<p>" + this.text + "</p>");
+        document.write("<small>" + this.tags.join(" ") + "</small><br>");
+        document.write("<i>" + dateText + "</i><hr>");
+    }
+}
+
+
+//3
+class NewsFeed {
+    constructor() {
+        this.news = [];
+    }
+
+    get count() {
+        return this.news.length;
+    }
+
+    add(news) {
+        this.news.push(news);
+    }
+
+    remove(index) {
+        this.news.splice(index, 1);
+    }
+
+    show() {
+        for (let i = 0; i < this.news.length; i++) {
+            this.news[i].print();
+        }
+    }
+
+    sort() {
+        this.news.sort((a, b) => b.date - a.date);
+    }
+
+    search(tag) {
+        let result = [];
+        for (let i = 0; i < this.news.length; i++) {
+            if (this.news[i].tags.includes(tag)) {
+                result.push(this.news[i]);
+            }
+        }
+        return result;
+    }
+}
+
+
+
+let n1 = new News(
+    "News 1",
+    "Text of news 1",
+    ["#js", "#code"],
+    "2026-06-13"
+);
+
+let n2 = new News(
+    "News 2",
+    "Text of news 2",
+    ["#html", "#css"],
+    "2026-06-10"
+);
+
+let n3 = new News(
+    "News 3",
+    "Text of news 3",
+    ["#js"],
+    "2026-06-01"
+);
+
+let feed = new NewsFeed();
+
+feed.add(n1);
+feed.add(n2);
+feed.add(n3);
+
+feed.sort();
+feed.show();
+
+document.write("<hr><b>Search #js:</b><br>");
+
+let found = feed.search("#js");
+for (let i = 0; i < found.length; i++) {
+    found[i].print();
+}
+
+</script>
+
+</body>
+</html>
