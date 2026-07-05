@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>DOM</title>
+
+<style>
+body{
+    font-family: Arial;
+    margin:20px;
+}
+
+h2{
+    margin-top:40px;
+}
+
+input{
+    padding:5px;
+}
+
+button{
+    padding:6px 12px;
+    margin:5px;
+    cursor:pointer;
+}
+
+#number{
+    width:60px;
+    text-align:center;
+}
+
+.block{
+    width:80px;
+    height:80px;
+    display:inline-block;
+    margin:5px;
+    cursor:pointer;
+}
+
+.palette{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.color{
+    width:40px;
+    height:40px;
+    border:1px solid black;
+    cursor:pointer;
+}
+
+.comment{
+    border:1px solid gray;
+    padding:10px;
+    margin-top:10px;
+}
+
+.comment small{
+    color:gray;
+}
+
+#suggestions{
+    width:220px;
+    border:1px solid gray;
+}
+
+.suggestion{
+    padding:5px;
+    cursor:pointer;
+}
+
+.suggestion:hover{
+    background:lightgray;
+}
+</style>
+
+</head>
+<body>
+
+<!-- ====================================== -->
+<h2>Завдання 1</h2>
+
+<button id="minus">-</button>
+
+<input type="text" id="number" value="0" readonly>
+
+<button id="plus">+</button>
+
+<!-- ====================================== -->
+<h2>Завдання 2</h2>
+
+<button id="addBlock">Додати блок</button>
+
+<div id="blocks"></div>
+
+<!-- ====================================== -->
+<h2>Завдання 3</h2>
+
+<p id="text">
+Це текст. Натисніть на колір і текст змінить свій колір.
+</p>
+
+<div class="palette">
+
+<div class="color" data-color="red" style="background:red"></div>
+
+<div class="color" data-color="blue" style="background:blue"></div>
+
+<div class="color" data-color="green" style="background:green"></div>
+
+<div class="color" data-color="orange" style="background:orange"></div>
+
+<div class="color" data-color="purple" style="background:purple"></div>
+
+</div>
+
+<!-- ====================================== -->
+<h2>Завдання 4</h2>
+
+<div id="comments">
+
+<div class="comment">
+<b>Іван</b><br>
+<small>01.07.2026</small>
+<p>Гарна стаття!</p>
+</div>
+
+</div>
+
+<br>
+
+<input type="text" id="name" placeholder="Ваше ім'я"><br><br>
+
+<textarea id="commentText" rows="4" cols="40" placeholder="Коментар"></textarea><br>
+
+<button id="addComment">Додати коментар</button>
+
+<!-- ====================================== -->
+<h2>Завдання 5</h2>
+
+<input type="text" id="country" placeholder="Введіть країну">
+
+<div id="suggestions"></div>
+
+<script>
+
+//======================
+// Завдання 1
+//======================
+
+let number = document.getElementById("number");
+
+document.getElementById("plus").onclick = function(){
+    number.value++;
+}
+
+document.getElementById("minus").onclick = function(){
+    number.value--;
+}
+
+//======================
+// Завдання 2
+//======================
+
+document.getElementById("addBlock").onclick = function(){
+
+    let div = document.createElement("div");
+
+    div.className = "block";
+
+    let colors = ["red","blue","green","yellow","orange","purple","pink"];
+
+    div.style.background = colors[Math.floor(Math.random()*colors.length)];
+
+    div.onclick = function(){
+        div.remove();
+    }
+
+    document.getElementById("blocks").append(div);
+
+}
+
+//======================
+// Завдання 3
+//======================
+
+let colors = document.querySelectorAll(".color");
+
+for(let i=0;i<colors.length;i++){
+
+    colors[i].onclick=function(){
+
+        document.getElementById("text").style.color=this.dataset.color;
+
+    }
+
+}
+
+//======================
+// Завдання 4
+//======================
+
+document.getElementById("addComment").onclick=function(){
+
+    let name=document.getElementById("name").value;
+
+    let text=document.getElementById("commentText").value;
+
+    if(name=="" || text==""){
+        return;
+    }
+
+    let date=new Date();
+
+    let today=date.getDate()+"."+(date.getMonth()+1)+"."+date.getFullYear();
+
+    let div=document.createElement("div");
+
+    div.className="comment";
+
+    div.innerHTML="<b>"+name+"</b><br><small>"+today+"</small><p>"+text+"</p>";
+
+    document.getElementById("comments").append(div);
+
+    document.getElementById("name").value="";
+
+    document.getElementById("commentText").value="";
+
+}
+
+//======================
+// Завдання 5
+//======================
+
+let countries=[
+"Україна",
+"Польща",
+"Німеччина",
+"Франція",
+"Італія",
+"Іспанія",
+"Португалія",
+"Канада",
+"США",
+"Японія",
+"Китай",
+"Бразилія",
+"Аргентина",
+"Австралія",
+"Швеція",
+"Норвегія",
+"Фінляндія",
+"Данія",
+"Чехія",
+"Словаччина",
+"Румунія",
+"Болгарія",
+"Туреччина",
+"Єгипет",
+"Індія"
+];
+
+document.getElementById("country").oninput=function(){
+
+    let value=this.value.toLowerCase();
+
+    let list=document.getElementById("suggestions");
+
+    list.innerHTML="";
+
+    if(value==""){
+        return;
+    }
+
+    let count=0;
+
+    for(let i=0;i<countries.length;i++){
+
+        if(countries[i].toLowerCase().startsWith(value)){
+
+            let div=document.createElement("div");
+
+            div.className="suggestion";
+
+            div.innerText=countries[i];
+
+            div.onclick=function(){
+
+                document.getElementById("country").value=this.innerText;
+
+                list.innerHTML="";
+
+            }
+
+            list.append(div);
+
+            count++;
+
+            if(count==10){
+                break;
+            }
+
+        }
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Palette</title>
+<style>
+body{font-family:Arial;background:#f6efe6;text-align:center}
+form{width:320px;margin:20px auto}
+input,select,button{width:100%;padding:8px;margin:5px 0}
+.err{color:red;font-size:14px}
+#colors{display:flex;flex-wrap:wrap;gap:15px;justify-content:center}
+.card{width:180px;padding:20px;color:#222}
+.inner{background:rgba(255,255,255,.5);padding:20px}
+</style>
+</head><body>
+<h2>Create new color</h2>
+<form onsubmit="saveColor();return false;">
+<label>Color:</label><input id="name"><div id="e1" class="err"></div>
+<label>Type:</label><select id="type" onchange="document.getElementById('code').value=''">
+<option>RGB</option><option>RGBA</option><option>HEX</option></select>
+<label>Code:</label><input id="code"><div id="e2" class="err"></div>
+<button>Save</button>
+</form>
+<h2>All colors</h2>
+<div id="colors"></div>
+<script>
+let colors=[
+{name:"YELLOWGREEN",type:"RGB",code:"154,205,50"},
+{name:"DARKCYAN",type:"RGBA",code:"0,139,139,1"},
+{name:"ORANGERED",type:"HEX",code:"#FF4500"}];
+function setCookie(n,v,h){let d=new Date();d.setTime(d.getTime()+h*3600000);document.cookie=n+"="+encodeURIComponent(v)+";expires="+d.toUTCString()+";path=/";}
+function getCookie(n){let m=document.cookie.match(new RegExp('(?:^|; )'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):null;}
+let c=getCookie("colors"); if(c) colors=JSON.parse(c);
+function render(){
+let out="";
+colors.forEach(x=>{
+ let bg=x.type=="HEX"?x.code:(x.type=="RGB"?"rgb("+x.code+")":"rgba("+x.code+")");
+ out+=`<div class="card" style="background:${bg}"><div class="inner"><b>${x.name}</b><br>${x.type}<br>${x.code}</div></div>`;
+});
+document.getElementById("colors").innerHTML=out;
+}
+render();
+function saveColor(){
+e1.textContent="";e2.textContent="";
+let n=name.value.trim(),t=type.value,cod=code.value.trim();
+if(!/^[A-Za-z]+$/.test(n)){e1.textContent="Color can only contain letters";return;}
+if(colors.some(x=>x.name.toLowerCase()==n.toLowerCase())){e1.textContent="Color exists";return;}
+let ok=false;
+if(t=="RGB") ok=/^([01]?\d?\d|2[0-4]\d|25[0-5]),\s*([01]?\d?\d|2[0-4]\d|25[0-5]),\s*([01]?\d?\d|2[0-4]\d|25[0-5])$/.test(cod);
+if(t=="RGBA") ok=/^([01]?\d?\d|2[0-4]\d|25[0-5]),\s*([01]?\d?\d|2[0-4]\d|25[0-5]),\s*([01]?\d?\d|2[0-4]\d|25[0-5]),\s*(0|1|0?\.\d+)$/.test(cod);
+if(t=="HEX") ok=/^#[0-9A-Fa-f]{6}$/.test(cod);
+if(!ok){e2.textContent=t+" code is incorrect";return;}
+colors.push({name:n.toUpperCase(),type:t,code:cod});
+setCookie("colors",JSON.stringify(colors),3);
+render();
+name.value="";code.value="";
+}
+</script>
+</body></html>
