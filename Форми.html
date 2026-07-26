@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Домашнє завдання - Форми</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #ffffff;
+  }
+  .task {
+    max-width: 700px;
+    margin-bottom: 40px;
+    padding: 15px;
+    background-color: #fbe4cf;
+    border: 1px solid #cccccc;
+  }
+  h2 {
+    color: #333;
+  }
+  input, textarea, select {
+    padding: 5px;
+    margin: 3px 0;
+  }
+  button {
+    padding: 6px 15px;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    border: 1px solid #aaa;
+    padding: 5px;
+  }
+  .message {
+    border-bottom: 1px solid #ccc;
+    padding: 8px 0;
+  }
+  .message-name {
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h1>Домашнє завдання - Форми</h1>
+
+<!-- Завдання 1 -->
+<div class="task">
+  <h2>Завдання 1. Форум</h2>
+  <div id="messagesList">
+    <div class="message">
+      <span class="message-name">Name</span> - 10:05:00 22.03.2018<br>
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+    </div>
+  </div>
+
+  <p><b>Add new message:</b></p>
+  Your name: <br>
+  <input type="text" id="name1" style="width:100%"><br>
+  Your message: <br>
+  <textarea id="text1" style="width:100%" rows="2"></textarea><br>
+  <button onclick="addMessage()">Send</button>
+</div>
+
+<script>
+function addMessage() {
+  var name = document.getElementById("name1").value;
+  var text = document.getElementById("text1").value;
+
+  if (name == "" || text == "") {
+    alert("Заповніть всі поля!");
+    return;
+  }
+
+  var d = new Date();
+  var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + " " + d.getDate() + "." + (d.getMonth()+1) + "." + d.getFullYear();
+
+  var list = document.getElementById("messagesList");
+  var div = document.createElement("div");
+  div.className = "message";
+  div.innerHTML = "<span class='message-name'>" + name + "</span> - " + time + "<br>" + text;
+  list.appendChild(div);
+
+  document.getElementById("name1").value = "";
+  document.getElementById("text1").value = "";
+}
+</script>
+
+<!-- Завдання 2 -->
+<div class="task">
+  <h2>Завдання 2. Тест</h2>
+  <div id="quiz"></div>
+</div>
+
+<script>
+var questions = [
+  { text: "How many letters are there in the word \"Hello\"?", a1: "5", a2: "2", correct: 1 },
+  { text: "How many letters are there in the word \"World\"?", a1: "4", a2: "5", correct: 2 }
+];
+var qNum = 0;
+var score = 0;
+
+function showQuestion() {
+  var quizDiv = document.getElementById("quiz");
+
+  if (qNum >= questions.length) {
+    quizDiv.innerHTML = "Result: " + score + " correct answers to " + questions.length + " questions.";
+    return;
+  }
+
+  var q = questions[qNum];
+  var btnText = (qNum == questions.length - 1) ? "Finish" : "Next";
+
+  quizDiv.innerHTML =
+    "<p>" + (qNum+1) + ") " + q.text + "</p>" +
+    "<input type='radio' name='answer' value='1'> " + q.a1 + "<br>" +
+    "<input type='radio' name='answer' value='2'> " + q.a2 + "<br>" +
+    "<button onclick='nextQuestion()'>" + btnText + "</button>";
+}
+
+function nextQuestion() {
+  var radios = document.getElementsByName("answer");
+  var answer = 0;
+  for (var i = 0; i < radios.length; i++) {
+    if (radios[i].checked) {
+      answer = parseInt(radios[i].value);
+    }
+  }
+
+  if (answer == 0) {
+    alert("Оберіть відповідь");
+    return;
+  }
+
+  if (answer == questions[qNum].correct) {
+    score++;
+  }
+
+  qNum++;
+  showQuestion();
+}
+
+showQuestion();
+</script>
+
+<!-- Завдання 3 -->
+<div class="task">
+  <h2>Завдання 3. Стилізований текст</h2>
+
+  <input type="checkbox" id="bold3"> Bold
+  <input type="checkbox" id="underline3"> Underline
+  <input type="checkbox" id="italic3"> Italics
+  <input type="radio" name="align3" value="left" checked> Left
+  <input type="radio" name="align3" value="right"> Right
+  <input type="radio" name="align3" value="justify"> Justify
+  <br><br>
+
+  <textarea id="input3" rows="5" style="width:100%">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</textarea>
+  <br>
+  <button onclick="showText()">Show text</button>
+
+  <div id="result3" style="margin-top:15px; padding:10px; background:white; border:1px solid #aaa;"></div>
+</div>
+
+<script>
+function showText() {
+  var text = document.getElementById("input3").value;
+  var bold = document.getElementById("bold3").checked;
+  var underline = document.getElementById("underline3").checked;
+  var italic = document.getElementById("italic3").checked;
+
+  var aligns = document.getElementsByName("align3");
+  var align = "left";
+  for (var i = 0; i < aligns.length; i++) {
+    if (aligns[i].checked) align = aligns[i].value;
+  }
+
+  var result = document.getElementById("result3");
+  result.innerText = text;
+  result.style.fontWeight = bold ? "bold" : "normal";
+  result.style.textDecoration = underline ? "underline" : "none";
+  result.style.fontStyle = italic ? "italic" : "normal";
+  result.style.textAlign = align;
+}
+</script>
+
+<!-- Завдання 4 -->
+<div class="task">
+  <h2>Завдання 4. Магазин книг</h2>
+
+  <p>Виберіть книгу:</p>
+  <select id="bookSelect">
+    <option value="Learning JavaScript">Learning JavaScript - 16$</option>
+    <option value="You Don't Know JS: Scope & Closures">You Don't Know JS: Scope & Closures - 20$</option>
+    <option value="JavaScript and JQuery">JavaScript and JQuery - 22$</option>
+  </select>
+  <br><br>
+
+  Quantity: <br>
+  <input type="number" id="qty4" value="1" min="1"><br>
+  Name: <br>
+  <input type="text" id="name4" style="width:100%"><br>
+  Delivery address: <br>
+  <textarea id="address4" style="width:100%" rows="2"></textarea><br>
+  Delivery date: <br>
+  <input type="date" id="date4"><br>
+  Comment: <br>
+  <textarea id="comment4" style="width:100%" rows="2"></textarea><br>
+
+  <button onclick="buyBook()">Buy</button>
+
+  <div id="thanks4" style="margin-top:15px; padding:10px; background:white; border:1px solid #aaa; display:none;"></div>
+</div>
+
+<script>
+function buyBook() {
+  var book = document.getElementById("bookSelect").value;
+  var name = document.getElementById("name4").value;
+  var address = document.getElementById("address4").value;
+  var date = document.getElementById("date4").value;
+
+  if (name == "" || address == "" || date == "") {
+    alert("Заповніть ім'я, адресу і дату!");
+    return;
+  }
+
+  var dateParts = date.split("-");
+  var niceDate = dateParts[2] + "." + dateParts[1] + "." + dateParts[0];
+
+  var thanks = document.getElementById("thanks4");
+  thanks.style.display = "block";
+  thanks.innerHTML = name + ", дякуємо за замовлення. " + book + " буде доставлений у " + niceDate + " за " + address + " адресою.";
+}
+</script>
+
+<!-- Завдання 5 -->
+<div class="task">
+  <h2>Завдання 5. Відвідуваність</h2>
+
+  Group:
+  <select id="group5">
+    <option>Group 1</option>
+    <option>Group 2</option>
+  </select>
+  Lesson:
+  <select id="lesson5">
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+  </select>
+  <button onclick="selectLesson()">Select</button>
+
+  <div id="details5" style="margin-top:15px; display:none;"></div>
+</div>
+
+<script>
+var attendanceData = {};
+var students5 = ["Student 1", "Student 2", "Student 3"];
+
+function selectLesson() {
+  var group = document.getElementById("group5").value;
+  var lesson = document.getElementById("lesson5").value;
+  var key = group + "_" + lesson;
+
+  var details = document.getElementById("details5");
+  details.style.display = "block";
+
+  if (attendanceData[key]) {
+    // вже збережено - просто показуємо
+    var data = attendanceData[key];
+    var html = "Topic: " + data.topic + "<br><br>";
+    html += "<table><tr><th>Name</th><th>Is present</th></tr>";
+    for (var i = 0; i < students5.length; i++) {
+      html += "<tr><td>" + students5[i] + "</td><td>" + (data.present[i] ? "present" : "") + "</td></tr>";
+    }
+    html += "</table>";
+    details.innerHTML = html;
+  } else {
+    // нове заняття - форма для заповнення
+    var html = "Topic: <input type='text' id='topic5' style='width:300px'><br><br>";
+    html += "<table><tr><th>Name</th><th>Is present</th></tr>";
+    for (var i = 0; i < students5.length; i++) {
+      html += "<tr><td>" + students5[i] + "</td><td><input type='checkbox' id='present5_" + i + "'></td></tr>";
+    }
+    html += "</table><br><button onclick='saveAttendance(\"" + key + "\")'>Save</button>";
+    details.innerHTML = html;
+  }
+}
+
+function saveAttendance(key) {
+  var topic = document.getElementById("topic5").value;
+  if (topic == "") {
+    alert("Введіть тему заняття");
+    return;
+  }
+
+  var present = [];
+  for (var i = 0; i < students5.length; i++) {
+    present.push(document.getElementById("present5_" + i).checked);
+  }
+
+  attendanceData[key] = { topic: topic, present: present };
+  selectLesson(); // показати збережений результат
+}
+</script>
+
+<!-- Завдання 6 -->
+<div class="task">
+  <h2>Завдання 6. Бронювання квитків</h2>
+
+  Direction:
+  <select id="direction6">
+    <option>Odessa - Lviv</option>
+    <option>Odessa - Kyiv</option>
+    <option>Odessa - Kharkiv</option>
+  </select>
+  Date:
+  <input type="date" id="date6">
+  <button onclick="searchTrain()">Search</button>
+
+  <div id="seats6" style="margin-top:15px; display:none;">
+    <div id="seatsGrid6"></div>
+    <p>Total price: <span id="total6">0$</span> <button onclick="bookTickets()">Book</button></p>
+  </div>
+
+  <h3>My tickets:</h3>
+  <table id="ticketsTable6">
+    <tr><th>Direction</th><th>Date</th><th>Seat</th></tr>
+  </table>
+</div>
+
+<script>
+var seatPrice = 62;
+var totalSeats = 28;
+var myTickets = [];
+var bookedSeats = {};
+
+function searchTrain() {
+  var direction = document.getElementById("direction6").value;
+  var date = document.getElementById("date6").value;
+
+  if (date == "") {
+    alert("Оберіть дату");
+    return;
+  }
+
+  var key = direction + "_" + date;
+  if (!bookedSeats[key]) {
+    bookedSeats[key] = [];
+  }
+
+  var grid = document.getElementById("seatsGrid6");
+  var html = "";
+  for (var i = 1; i <= totalSeats; i++) {
+    var isBooked = bookedSeats[key].indexOf(i) != -1;
+    if (isBooked) {
+      html += "<input type='checkbox' disabled> " + i + " (booked) &nbsp; ";
+    } else {
+      html += "<input type='checkbox' class='seatCheck6' value='" + i + "' onclick='updateTotal()'> " + i + " &nbsp; ";
+    }
+  }
+  grid.innerHTML = html;
+
+  document.getElementById("seats6").style.display = "block";
+  updateTotal();
+}
+
+function updateTotal() {
+  var checks = document.getElementsByClassName("seatCheck6");
+  var count = 0;
+  for (var i = 0; i < checks.length; i++) {
+    if (checks[i].checked) count++;
+  }
+  document.getElementById("total6").innerText = (count * seatPrice) + "$";
+}
+
+function bookTickets() {
+  var direction = document.getElementById("direction6").value;
+  var date = document.getElementById("date6").value;
+  var key = direction + "_" + date;
+
+  var checks = document.getElementsByClassName("seatCheck6");
+  var chosen = [];
+  for (var i = 0; i < checks.length; i++) {
+    if (checks[i].checked) {
+      chosen.push(parseInt(checks[i].value));
+    }
+  }
+
+  if (chosen.length == 0) {
+    alert("Оберіть хоча б одне місце");
+    return;
+  }
+
+  for (var i = 0; i < chosen.length; i++) {
+    bookedSeats[key].push(chosen[i]);
+    myTickets.push({ direction: direction, date: date, seat: chosen[i] });
+  }
+
+  var dateParts = date.split("-");
+  var niceDate = dateParts[2] + "." + dateParts[1] + "." + dateParts[0];
+
+  var table = document.getElementById("ticketsTable6");
+  table.innerHTML = "<tr><th>Direction</th><th>Date</th><th>Seat</th></tr>";
+  for (var i = 0; i < myTickets.length; i++) {
+    var t = myTickets[i];
+    var tp = t.date.split("-");
+    var nd = tp[2] + "." + tp[1] + "." + tp[0];
+    table.innerHTML += "<tr><td>" + t.direction + "</td><td>" + nd + "</td><td>" + t.seat + "</td></tr>";
+  }
+
+  searchTrain(); // оновити список місць (заброньовані стануть недоступні)
+}
+</script>
+
+</body>
+</html>

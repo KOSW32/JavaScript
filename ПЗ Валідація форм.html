@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Валідація форм + Cookie</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #ffffff;
+  }
+  .box {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fbe4cf;
+    border: 1px solid #cccccc;
+  }
+  .top-row {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+  .top-row a {
+    color: #2b5b8f;
+    cursor: pointer;
+  }
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  .field {
+    width: 48%;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 12px;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  label {
+    font-weight: bold;
+  }
+  .error {
+    color: #a00;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  input, select {
+    width: 100%;
+    padding: 6px;
+    margin: 4px 0;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    padding: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ СТОРІНКА 1: РЕЄСТРАЦІЯ ============ -->
+<div class="box" id="page1">
+  <h1>Registration</h1>
+
+  <div class="row">
+    <label>Email:</label>
+    <span class="error" id="emailError"></span>
+  </div>
+  <input type="text" id="email">
+
+  <div class="row">
+    <label>Password:</label>
+    <span class="error" id="passwordError"></span>
+  </div>
+  <input type="password" id="password">
+
+  <div class="row">
+    <label>Repeat:</label>
+    <span class="error" id="repeatError"></span>
+  </div>
+  <input type="password" id="repeat">
+
+  <button onclick="signUp()">Sign Up</button>
+</div>
+
+<!-- ============ СТОРІНКА 2: ІНФОРМАЦІЯ КОРИСТУВАЧА ============ -->
+<div class="box hidden" id="page2">
+  <div class="top-row">
+    Hello, <span id="helloEmail"></span>! <a onclick="exitUser()">exit</a>
+  </div>
+
+  <h1>User info</h1>
+
+  <div class="field">
+    <div class="row"><label>First Name:</label><span class="error" id="firstNameError"></span></div>
+    <input type="text" id="firstName">
+  </div>
+  <div class="field">
+    <div class="row"><label>Last Name:</label><span class="error" id="lastNameError"></span></div>
+    <input type="text" id="lastName">
+  </div>
+
+  <div class="field">
+    <div class="row"><label>Year of birth:</label><span class="error" id="birthYearError"></span></div>
+    <input type="text" id="birthYear">
+  </div>
+  <div class="field">
+    <label>Gender:</label>
+    <select id="gender">
+      <option value="male">male</option>
+      <option value="female">female</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <div class="row"><label>Phone number:</label><span class="error" id="phoneError"></span></div>
+    <input type="text" id="phone">
+  </div>
+  <div class="field">
+    <div class="row"><label>Skype:</label><span class="error" id="skypeError"></span></div>
+    <input type="text" id="skype">
+  </div>
+
+  <button onclick="saveInfo()">Save</button>
+</div>
+
+<script>
+// ---------- Cookie helpers ----------
+function setCookie(name, value, hours) {
+  var d = new Date();
+  d.setTime(d.getTime() + (hours * 60 * 60 * 1000));
+  document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + d.toUTCString() + ";path=/";
+}
+
+function getCookie(name) {
+  var cname = name + "=";
+  var cookies = document.cookie.split(";");
+  for (var i = 0; i < cookies.length; i++) {
+    var c = cookies[i].trim();
+    if (c.indexOf(cname) === 0) {
+      return decodeURIComponent(c.substring(cname.length));
+    }
+  }
+  return "";
+}
+
+function deleteCookie(name) {
+  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+// ---------- Перемикання "сторінок" ----------
+function showPage1() {
+  document.getElementById("page1").classList.remove("hidden");
+  document.getElementById("page2").classList.add("hidden");
+}
+
+function showPage2() {
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
+
+  var email = getCookie("userEmail");
+  document.getElementById("helloEmail").innerText = email;
+
+  var firstName = getCookie("firstName");
+  var lastName = getCookie("lastName");
+  var birthYear = getCookie("birthYear");
+  var gender = getCookie("gender");
+  var phone = getCookie("phone");
+  var skype = getCookie("skype");
+
+  if (firstName != "") document.getElementById("firstName").value = firstName;
+  if (lastName != "") document.getElementById("lastName").value = lastName;
+  if (birthYear != "") document.getElementById("birthYear").value = birthYear;
+  if (gender != "") document.getElementById("gender").value = gender;
+  if (phone != "") document.getElementById("phone").value = phone;
+  if (skype != "") document.getElementById("skype").value = skype;
+}
+
+// ---------- Перевірка Cookie при завантаженні ----------
+window.onload = function () {
+  var email = getCookie("userEmail");
+  if (email != "") {
+    showPage2();
+  } else {
+    showPage1();
+  }
+};
+
+// ---------- Валідація реєстрації ----------
+function validateEmail(email) {
+  var atIndex = email.indexOf("@");
+  if (atIndex === -1) return false;
+
+  var local = email.substring(0, atIndex);
+  var domain = email.substring(atIndex + 1);
+
+  if (local.length < 3) return false;
+  if (!/^[A-Za-z._-]+$/.test(local)) return false;
+  if (!/^[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(domain)) return false;
+
+  return true;
+}
+
+function validatePassword(pass) {
+  if (pass.length < 6) return false;
+  if (!/[a-z]/.test(pass)) return false;
+  if (!/[A-Z]/.test(pass)) return false;
+  if (!/[0-9]/.test(pass)) return false;
+  return true;
+}
+
+function signUp() {
+  var email = document.getElementById("email").value;
+  var password = document.getElementById("password").value;
+  var repeat = document.getElementById("repeat").value;
+
+  document.getElementById("emailError").innerText = "";
+  document.getElementById("passwordError").innerText = "";
+  document.getElementById("repeatError").innerText = "";
+
+  var valid = true;
+
+  if (email == "" || !validateEmail(email)) {
+    document.getElementById("emailError").innerText = "Wrong email address";
+    valid = false;
+  }
+
+  if (password == "" || !validatePassword(password)) {
+    document.getElementById("passwordError").innerText = "Password is too weak";
+    valid = false;
+  }
+
+  if (repeat == "" || repeat != password) {
+    document.getElementById("repeatError").innerText = "Passwords must match";
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  setCookie("userEmail", email, 1);
+  setCookie("userPassword", password, 1);
+
+  showPage2();
+}
+
+// ---------- Exit ----------
+function exitUser() {
+  deleteCookie("userEmail");
+  deleteCookie("userPassword");
+  deleteCookie("firstName");
+  deleteCookie("lastName");
+  deleteCookie("birthYear");
+  deleteCookie("gender");
+  deleteCookie("phone");
+  deleteCookie("skype");
+
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("repeat").value = "";
+
+  showPage1();
+}
+
+// ---------- Save з валідацією ----------
+function saveInfo() {
+  var firstName = document.getElementById("firstName").value;
+  var lastName = document.getElementById("lastName").value;
+  var birthYear = document.getElementById("birthYear").value;
+  var gender = document.getElementById("gender").value;
+  var phone = document.getElementById("phone").value;
+  var skype = document.getElementById("skype").value;
+
+  document.getElementById("firstNameError").innerText = "";
+  document.getElementById("lastNameError").innerText = "";
+  document.getElementById("birthYearError").innerText = "";
+  document.getElementById("phoneError").innerText = "";
+  document.getElementById("skypeError").innerText = "";
+
+  var valid = true;
+
+  if (firstName == "" || firstName.length > 20 || !/^[A-Za-z]+$/.test(firstName)) {
+    document.getElementById("firstNameError").innerText = "Only letters, max 20";
+    valid = false;
+  }
+
+  if (lastName == "" || lastName.length > 20 || !/^[A-Za-z]+$/.test(lastName)) {
+    document.getElementById("lastNameError").innerText = "Only letters, max 20";
+    valid = false;
+  }
+
+  var currentYear = new Date().getFullYear();
+  var yearNum = parseInt(birthYear);
+  if (birthYear == "" || isNaN(yearNum) || yearNum < 1900 || yearNum > currentYear) {
+    document.getElementById("birthYearError").innerText = "1900 - " + currentYear;
+    valid = false;
+  }
+
+  if (phone != "") {
+    if (!/^[0-9\s()\-]+$/.test(phone)) {
+      document.getElementById("phoneError").innerText = "Wrong format";
+      valid = false;
+    } else {
+      var digitsOnly = phone.replace(/[^0-9]/g, "");
+      if (digitsOnly.length < 10 || digitsOnly.length > 12) {
+        document.getElementById("phoneError").innerText = "10-12 digits";
+        valid = false;
+      }
+    }
+  }
+
+  if (skype != "") {
+    if (!/^[A-Za-z0-9.-]+$/.test(skype)) {
+      document.getElementById("skypeError").innerText = "Wrong format";
+      valid = false;
+    }
+  }
+
+  if (!valid) return;
+
+  setCookie("firstName", firstName, 1);
+  setCookie("lastName", lastName, 1);
+  setCookie("birthYear", birthYear, 1);
+  setCookie("gender", gender, 1);
+  setCookie("phone", phone, 1);
+  setCookie("skype", skype, 1);
+
+  alert("Дані збережено!");
+}
+</script>
+</body>
+</html>

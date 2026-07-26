@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Практична робота - Форми</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #ffffff;
+  }
+  .task {
+    max-width: 700px;
+    margin-bottom: 40px;
+    padding: 15px;
+    background-color: #fbe4cf;
+    border: 1px solid #cccccc;
+  }
+  h2 {
+    color: #333;
+  }
+  input, textarea, select {
+    padding: 5px;
+    margin: 3px 0;
+  }
+  button {
+    padding: 6px 15px;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    border: 1px solid #aaa;
+    padding: 5px;
+  }
+  .color-box {
+    display: inline-block;
+    width: 150px;
+    padding: 8px;
+    margin: 4px;
+    color: white;
+    text-align: center;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Практична робота - Форми</h1>
+
+<!-- Завдання 1 -->
+<div class="task">
+  <h2>Завдання 1. Логін</h2>
+
+  Your login: <br>
+  <input type="text" id="login1" style="width:100%"><br>
+  Your password: <br>
+  <input type="password" id="pass1" style="width:100%"><br>
+  <input type="checkbox" id="remember1"> Remember me
+  <br><br>
+  <button onclick="signIn()">Sign In</button>
+
+  <div id="result1" style="margin-top:15px; padding:10px; background:white; border:1px solid #aaa; display:none;"></div>
+</div>
+
+<script>
+function signIn() {
+  var login = document.getElementById("login1").value;
+  var remember = document.getElementById("remember1").checked;
+
+  if (login == "") {
+    alert("Введіть логін!");
+    return;
+  }
+
+  var text = "Привіт, " + login + "! Я тебе " + (remember ? "запам'ятав" : "не запам'ятав");
+
+  var res = document.getElementById("result1");
+  res.style.display = "block";
+  res.innerText = text;
+}
+</script>
+
+<!-- Завдання 2 -->
+<div class="task">
+  <h2>Завдання 2. Реєстрація</h2>
+
+  Your email: <br>
+  <input type="text" id="email2" style="width:100%"><br>
+  Your login: <br>
+  <input type="text" id="login2" style="width:100%"><br>
+  Your password: <br>
+  <input type="password" id="pass2" style="width:100%"><br>
+  Repeat password: <br>
+  <input type="password" id="pass2repeat" style="width:100%"><br>
+
+  <button onclick="signUp()">Sign Up</button>
+
+  <div id="result2" style="margin-top:15px; padding:10px; background:white; border:1px solid #aaa; display:none;"></div>
+</div>
+
+<script>
+function signUp() {
+  var email = document.getElementById("email2").value;
+  var login = document.getElementById("login2").value;
+  var pass = document.getElementById("pass2").value;
+  var passRepeat = document.getElementById("pass2repeat").value;
+
+  if (email == "" || login == "" || pass == "" || passRepeat == "") {
+    alert("Заповніть всі поля!");
+    return;
+  }
+
+  if (pass != passRepeat) {
+    alert("Паролі не співпадають!");
+    return;
+  }
+
+  var res = document.getElementById("result2");
+  res.style.display = "block";
+  res.innerText = "На " + email + " надіслано лист із підтвердженням";
+}
+</script>
+
+<!-- Завдання 3 -->
+<div class="task">
+  <h2>Завдання 3. Інформація про користувача</h2>
+
+  Firstname: <br>
+  <input type="text" id="firstname3" style="width:100%"><br>
+  Lastname: <br>
+  <input type="text" id="lastname3" style="width:100%"><br>
+  Birthday: <br>
+  <input type="date" id="birthday3"><br>
+  Gender:
+  <input type="radio" name="gender3" value="Male" checked> Male
+  <input type="radio" name="gender3" value="Female"> Female
+  <br><br>
+  Country: <br>
+  <select id="country3">
+    <option>Ukraine</option>
+    <option>Canada</option>
+    <option>USA</option>
+    <option>Germany</option>
+    <option>Poland</option>
+  </select><br>
+  City: <br>
+  <select id="city3">
+    <option>Kyiv</option>
+    <option>Toronto</option>
+    <option>New York</option>
+    <option>Berlin</option>
+    <option>Warsaw</option>
+  </select><br>
+
+  Skills:
+  <input type="checkbox" class="skill3" value="HTML"> HTML
+  <input type="checkbox" class="skill3" value="CSS"> CSS
+  <input type="checkbox" class="skill3" value="JS"> JS
+  <input type="checkbox" class="skill3" value="PHP"> PHP
+  <input type="checkbox" class="skill3" value="C++"> C++
+  <input type="checkbox" class="skill3" value="JAVA"> JAVA
+  <input type="checkbox" class="skill3" value="C#"> C#
+  <br><br>
+
+  <button onclick="saveInfo()">Save</button>
+
+  <div id="result3" style="margin-top:15px; display:none;"></div>
+</div>
+
+<script>
+function saveInfo() {
+  var firstname = document.getElementById("firstname3").value;
+  var lastname = document.getElementById("lastname3").value;
+  var birthday = document.getElementById("birthday3").value;
+  var country = document.getElementById("country3").value;
+  var city = document.getElementById("city3").value;
+
+  var genders = document.getElementsByName("gender3");
+  var gender = "";
+  for (var i = 0; i < genders.length; i++) {
+    if (genders[i].checked) gender = genders[i].value;
+  }
+
+  var skillsChecks = document.getElementsByClassName("skill3");
+  var skills = [];
+  for (var i = 0; i < skillsChecks.length; i++) {
+    if (skillsChecks[i].checked) skills.push(skillsChecks[i].value);
+  }
+
+  if (firstname == "" || lastname == "" || birthday == "") {
+    alert("Заповніть основні поля!");
+    return;
+  }
+
+  var dateParts = birthday.split("-");
+  var niceDate = dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
+
+  var html = "<b>Result:</b>";
+  html += "<table>";
+  html += "<tr><td>Firstname</td><td>" + firstname + "</td></tr>";
+  html += "<tr><td>Lastname</td><td>" + lastname + "</td></tr>";
+  html += "<tr><td>Birthday</td><td>" + niceDate + "</td></tr>";
+  html += "<tr><td>Gender</td><td>" + gender + "</td></tr>";
+  html += "<tr><td>Country</td><td>" + country + "</td></tr>";
+  html += "<tr><td>City</td><td>" + city + "</td></tr>";
+  html += "<tr><td>Skills</td><td>" + skills.join(", ") + "</td></tr>";
+  html += "</table>";
+
+  var res = document.getElementById("result3");
+  res.style.display = "block";
+  res.innerHTML = html;
+}
+</script>
+
+<!-- Завдання 4 -->
+<div class="task">
+  <h2>Завдання 4. Палітра кольорів</h2>
+
+  R: <input type="number" id="r4" min="0" max="255" style="width:60px">
+  G: <input type="number" id="g4" min="0" max="255" style="width:60px">
+  B: <input type="number" id="b4" min="0" max="255" style="width:60px">
+  <br>
+  <button onclick="addColor()">Add color</button>
+
+  <div id="palette4" style="margin-top:15px;">
+    <span class="color-box" style="background: rgb(165,42,42)">RGB (165, 42, 42)</span>
+    <span class="color-box" style="background: rgb(138,43,226)">RGB (138, 43, 226)</span>
+    <span class="color-box" style="background: rgb(0,139,139)">RGB (0, 139, 139)</span>
+    <span class="color-box" style="background: rgb(100,149,237)">RGB (100, 149, 237)</span>
+    <span class="color-box" style="background: rgb(210,105,30)">RGB (210, 105, 30)</span>
+    <span class="color-box" style="background: rgb(0,206,209)">RGB (0, 206, 209)</span>
+    <span class="color-box" style="background: rgb(189,183,107)">RGB (189, 183, 107)</span>
+    <span class="color-box" style="background: rgb(255,105,180)">RGB (255, 105, 180)</span>
+  </div>
+</div>
+
+<script>
+function addColor() {
+  var r = document.getElementById("r4").value;
+  var g = document.getElementById("g4").value;
+  var b = document.getElementById("b4").value;
+
+  if (r == "" || g == "" || b == "") {
+    alert("Заповніть R, G, B!");
+    return;
+  }
+
+  var palette = document.getElementById("palette4");
+  var span = document.createElement("span");
+  span.className = "color-box";
+  span.style.background = "rgb(" + r + "," + g + "," + b + ")";
+  span.innerText = "RGB (" + r + ", " + g + ", " + b + ")";
+  palette.appendChild(span);
+
+  document.getElementById("r4").value = "";
+  document.getElementById("g4").value = "";
+  document.getElementById("b4").value = "";
+}
+</script>
+
+<!-- Завдання 5 -->
+<div class="task">
+  <h2>Завдання 5. Створення тесту</h2>
+
+  <b>All questions:</b>
+  <div id="questionsList5"></div>
+  <hr>
+
+  <b>Add new question:</b><br>
+  Question: <br>
+  <input type="text" id="question5" style="width:100%"><br>
+  Correct answer: <br>
+  <input type="text" id="correct5" style="width:100%"><br>
+  Wrong answer: <br>
+  <input type="text" id="wrong5" style="width:100%"><br>
+
+  <button onclick="addQuestion()">Add</button>
+</div>
+
+<script>
+function addQuestion() {
+  var question = document.getElementById("question5").value;
+  var correct = document.getElementById("correct5").value;
+  var wrong = document.getElementById("wrong5").value;
+
+  if (question == "" || correct == "" || wrong == "") {
+    alert("Заповніть всі поля!");
+    return;
+  }
+
+  var list = document.getElementById("questionsList5");
+  var div = document.createElement("div");
+  div.style.marginBottom = "10px";
+  div.innerHTML = "<u>" + question + "</u><br>Correct answer: " + correct + "<br>Wrong answer: " + wrong;
+  list.appendChild(div);
+
+  document.getElementById("question5").value = "";
+  document.getElementById("correct5").value = "";
+  document.getElementById("wrong5").value = "";
+}
+</script>
+
+</body>
+</html>
