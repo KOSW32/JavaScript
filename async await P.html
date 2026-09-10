@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Завдання 1-2</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 30px;
+  }
+  h2 {
+    color: #fff;
+    border-bottom: 1px solid #444;
+    padding-bottom: 6px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #111;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+  .ok { color: #6a9955; }
+  .err { color: #f44747; }
+  .val { color: #ce9178; }
+</style>
+</head>
+<body>
+
+<h2>Завдання 1 — executeTasks</h2>
+<pre id="out1">Виконується...</pre>
+
+<h2>Завдання 2 — sumArrayAsync</h2>
+<pre id="out2">Виконується...</pre>
+
+<script>
+function log(id, html) {
+  const el = document.getElementById(id);
+  el.innerHTML = (el.innerHTML === 'Виконується...' ? '' : el.innerHTML + '\n') + html;
+}
+
+//1
+
+function task1() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Task 1 завершено");
+    }, 1000);
+  });
+}
+
+function task2() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Task 2 завершено");
+    }, 2000);
+  });
+}
+
+function task3() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Task 3 завершено");
+    }, 3000);
+  });
+}
+
+async function executeTasks() {
+  const result1 = await task1();
+  log('out1', '<span class="ok">' + result1 + '</span>');
+
+  const result2 = await task2();
+  log('out1', '<span class="ok">' + result2 + '</span>');
+
+  const result3 = await task3();
+  log('out1', '<span class="ok">' + result3 + '</span>');
+}
+
+executeTasks();
+
+
+//2
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function sumArrayAsync(array) {
+  if (!Array.isArray(array) || array.length === 0) {
+    throw new Error("Масив порожній");
+  }
+
+  let sum = 0;
+  for (let i = 0; i < array.length; i++) {
+    await delay(1000);
+    sum += array[i];
+  }
+  return sum;
+}
+
+async function main() {
+  try {
+    const result = await sumArrayAsync([1, 2, 3, 4, 5]);
+    log('out2', '<span class="ok">Сума:</span> <span class="val">' + result + '</span>');
+  } catch (err) {
+    log('out2', '<span class="err">Помилка:</span> ' + err.message);
+  }
+
+  try {
+    await sumArrayAsync([]);
+  } catch (err) {
+    log('out2', '<span class="err">Помилка:</span> ' + err.message);
+  }
+}
+
+main();
+</script>
+
+</body>
+</html>

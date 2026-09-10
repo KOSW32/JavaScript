@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Завдання 1-2</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 30px;
+  }
+  h2 {
+    color: #fff;
+    border-bottom: 1px solid #444;
+    padding-bottom: 6px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #111;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+  .ok { color: #6a9955; }
+  .err { color: #f44747; }
+  .val { color: #ce9178; }
+</style>
+</head>
+<body>
+
+<h2>Завдання 1 — multiplyAsync</h2>
+<pre id="out1">Виконується---</pre>
+
+<h2>Завдання 2 — sortArrayAsync</h2>
+<pre id="out2">Виконується---</pre>
+
+<script>
+function log(id, html) {
+  const el = document.getElementById(id);
+  el.innerHTML = (el.innerHTML === 'Виконується...' ? '' : el.innerHTML + '\n') + html;
+}
+
+//1
+
+function multiplyAsync(a, b) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (typeof a !== 'number' || typeof b !== 'number' || isNaN(a) || isNaN(b)) {
+        reject(new Error("Некоректні значення"));
+        return;
+      }
+      resolve(a * b);
+    }, 2000);
+  });
+}
+
+async function main() {
+  try {
+    const result = await multiplyAsync(6, 9);
+    log('out1', '<span class="ok">Результат:</span> <span class="val">' + result + '</span>');
+  } catch (err) {
+    log('out1', '<span class="err">Помилка:</span> ' + err.message);
+  }
+}
+
+main();
+
+
+//1
+
+function sortArrayAsync(array) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!Array.isArray(array) || array.length === 0) {
+        reject(new Error("Масив порожній"));
+        return;
+      }
+      const sorted = [...array].sort((a, b) => a - b);
+      resolve(sorted);
+    }, 2000);
+  });
+}
+
+async function main2() {
+  try {
+    const result = await sortArrayAsync([5, 3, 8, 1, 9, 2]);
+    log('out2', '<span class="ok">Відсортований масив:</span> <span class="val">' + JSON.stringify(result) + '</span>');
+  } catch (err) {
+    log('out2', '<span class="err">Помилка:</span> ' + err.message);
+  }
+
+  try {
+    await sortArrayAsync([]);
+  } catch (err) {
+    log('out2', '<span class="err">Помилка:</span> ' + err.message);
+  }
+}
+
+main2();
+</script>
+
+</body>
+</html>

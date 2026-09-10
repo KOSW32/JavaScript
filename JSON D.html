@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Переглядач JSON</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 30px; background: #f5f5f5; }
+  .container { max-width: 700px; margin: 0 auto; }
+  input[type=file] { margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; background: #fff; }
+  th, td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+  .error { color: red; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Переглядач JSON-файлів</h1>
+  <input type="file" id="fileInput" accept=".json,application/json">
+  <div id="error" class="error"></div>
+  <table id="table" style="display:none;">
+    <thead><tr><th>Поле (Ключ)</th><th>Значення</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const errorDiv = document.getElementById('error');
+const table = document.getElementById('table');
+const tbody = document.getElementById('tbody');
+
+fileInput.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  errorDiv.textContent = '';
+  table.style.display = 'none';
+  tbody.innerHTML = '';
+
+  if (!file) return;
+
+  if (!file.name.toLowerCase().endsWith('.json')) {
+    errorDiv.textContent = 'Помилка: дозволені лише файли з розширенням .json';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    let data;
+    try {
+      data = JSON.parse(event.target.result);
+    } catch (err) {
+      errorDiv.textContent = 'Помилка розбору JSON: ' + err.message;
+      return;
+    }
+    renderTable(data);
+  };
+  reader.onerror = function() {
+    errorDiv.textContent = 'Не вдалося прочитати файл';
+  };
+  reader.readAsText(file);
+});
+
+function formatValue(value) {
+  if (value === null) return 'null';
+  if (typeof value === 'object') {
+    return '<pre>' + JSON.stringify(value, null, 2) + '</pre>';
+  }
+  return String(value);
+}
+
+function renderTable(obj) {
+  tbody.innerHTML = '';
+  for (const key in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+    const tr = document.createElement('tr');
+    const tdKey = document.createElement('td');
+    const tdVal = document.createElement('td');
+    tdKey.textContent = key;
+    tdVal.innerHTML = formatValue(obj[key]);
+    tr.appendChild(tdKey);
+    tr.appendChild(tdVal);
+    tbody.appendChild(tr);
+  }
+  table.style.display = tbody.children.length ? 'table' : 'none';
+}
+</script>
+</body>
+</html>

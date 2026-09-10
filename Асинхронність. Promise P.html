@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Завдання 1-4</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 30px;
+  }
+  h2 {
+    color: #fff;
+    border-bottom: 1px solid #444;
+    padding-bottom: 6px;
+    margin-top: 40px;
+  }
+  pre {
+    background: #111;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+  .ok { color: #6a9955; }
+  .err { color: #f44747; }
+  .val { color: #ce9178; }
+</style>
+</head>
+<body>
+
+<h2>Завдання 1 — calculate</h2>
+<pre id="out1"></pre>
+
+<h2>Завдання 2 — processArray</h2>
+<pre id="out2"></pre>
+
+<h2>Завдання 3 — ланцюжок Promises (замовлення)</h2>
+<pre id="out3">Виконується---</pre>
+
+<h2>Завдання 4 — checkEvenNumber</h2>
+<pre id="out4">Виконується---</pre>
+
+<script>
+//1
+
+function calculate(a, b, onSuccess, onError) {
+  if (b === 0) {
+    onError("Ділення на нуль заборонено");
+    return;
+  }
+  onSuccess(a / b);
+}
+
+function onSuccess(result) {
+  log('out1', '<span class="ok">Результат:</span> <span class="val">' + result + '</span>');
+}
+
+function onError(error) {
+  log('out1', '<span class="err">Помилка:</span> ' + error);
+}
+
+calculate(10, 2, onSuccess, onError); 
+calculate(10, 0, onSuccess, onError); 
+
+
+//2
+
+function processArray(array, callback) {
+  const result = [];
+  for (let i = 0; i < array.length; i++) {
+    const r = callback(array[i]);
+    if (r !== undefined) result.push(r);
+  }
+  return result;
+}
+
+function logElement(element) {
+  console.log(element);
+  log('out2', 'log: <span class="val">' + element + '</span>');
+}
+
+function squareElement(element) {
+  return element * element;
+}
+
+processArray([1, 2, 3, 4, 5], logElement); // Виводить: 1, 2, 3, 4, 5
+const squares = processArray([1, 2, 3, 4, 5], squareElement); // [1, 4, 9, 16, 25]
+log('out2', '<span class="ok">squareElement результат:</span> <span class="val">' + JSON.stringify(squares) + '</span>');
+
+
+//3
+
+function createOrder(orderId) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`Замовлення створено: ${orderId}`);
+    }, 1000);
+  });
+}
+
+function processOrder(orderId) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`Замовлення оброблено: ${orderId}`);
+    }, 2000);
+  });
+}
+
+function deliverOrder(orderId) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`Замовлення доставлено: ${orderId}`);
+    }, 3000);
+  });
+}
+
+document.getElementById('out3').innerHTML = '';
+
+const orderId = 101;
+
+createOrder(orderId)
+  .then((msg) => {
+    log('out3', '<span class="ok">' + msg + '</span>');
+    return processOrder(orderId);
+  })
+  .then((msg) => {
+    log('out3', '<span class="ok">' + msg + '</span>');
+    return deliverOrder(orderId);
+  })
+  .then((msg) => {
+    log('out3', '<span class="ok">' + msg + '</span>');
+  })
+  .catch((err) => {
+    log('out3', '<span class="err">Помилка:</span> ' + err);
+  });
+
+
+//4
+
+function checkEvenNumber(number) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (number % 2 === 0) {
+        resolve(`Парне число: ${number}`);
+      } else {
+        reject(`Непарне число: ${number}`);
+      }
+    }, 1000);
+  });
+}
+
+document.getElementById('out4').innerHTML = '';
+
+checkEvenNumber(4)
+  .then((msg) => log('out4', '<span class="ok">' + msg + '</span>'))
+  .catch((err) => log('out4', '<span class="err">' + err + '</span>'));
+
+checkEvenNumber(7)
+  .then((msg) => log('out4', '<span class="ok">' + msg + '</span>'))
+  .catch((err) => log('out4', '<span class="err">' + err + '</span>'));
+
+
+/* ======================= Допоміжна функція ======================= */
+
+function log(id, html) {
+  const el = document.getElementById(id);
+  el.innerHTML += (el.innerHTML ? '\n' : '') + html;
+}
+</script>
+
+</body>
+</html>

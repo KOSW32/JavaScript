@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Array Functions</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 30px;
+  }
+  h2 {
+    color: #fff;
+  }
+  pre {
+    background: #111;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  .label {
+    color: #6a9955;
+  }
+  .result {
+    color: #ce9178;
+  }
+</style>
+</head>
+<body>
+
+<h2>Завдання 1 — processArray</h2>
+<pre id="output1"></pre>
+
+<h2>Завдання 2 — filterArray</h2>
+<pre id="output2"></pre>
+
+<script>
+// Завдання 1
+
+function processArray(array, callback) {
+  const result = [];
+  for (let i = 0; i < array.length; i++) {
+    result.push(callback(array[i]));
+  }
+  return result;
+}
+
+function doubleElement(element) {
+  return element * 2;
+}
+
+function reverseElement(element) {
+  return String(element).split('').reverse().join('');
+}
+
+const res1a = processArray([1, 2, 3, 4, 5], doubleElement);
+const res1b = processArray(["hello", "world"], reverseElement);
+
+document.getElementById('output1').innerHTML =
+  '<span class="label">processArray([1, 2, 3, 4, 5], doubleElement)</span> = <span class="result">' + JSON.stringify(res1a) + '</span>\n' +
+  '<span class="label">processArray(["hello", "world"], reverseElement)</span> = <span class="result">' + JSON.stringify(res1b) + '</span>';
+
+
+// Завдання 2
+
+function filterArray(array, callback) {
+  const result = [];
+  for (let i = 0; i < array.length; i++) {
+    if (callback(array[i])) {
+      result.push(array[i]);
+    }
+  }
+  return result;
+}
+
+function isEven(number) {
+  return number % 2 === 0;
+}
+
+function isPositive(number) {
+  return number > 0;
+}
+
+const res2a = filterArray([1, 2, 3, 4, 5, 6], isEven);
+const res2b = filterArray([-3, -1, 0, 2, 5], isPositive);
+
+document.getElementById('output2').innerHTML =
+  '<span class="label">filterArray([1, 2, 3, 4, 5, 6], isEven)</span> = <span class="result">' + JSON.stringify(res2a) + '</span>\n' +
+  '<span class="label">filterArray([-3, -1, 0, 2, 5], isPositive)</span> = <span class="result">' + JSON.stringify(res2b) + '</span>';
+
+
+console.log(res1a);
+console.log(res1b);
+console.log(res2a);
+console.log(res2b);
+</script>
+
+</body>
+</html>
