@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Movie Search</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5efe6;
+    padding: 40px;
+  }
+  .search-box {
+    max-width: 480px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    background: #f5efe6;
+    padding: 20px;
+  }
+  .search-box h2 {
+    text-align: center;
+    margin-top: 0;
+  }
+  .form-panel {
+    border: 1px solid #999;
+    background: #f5efe6;
+    padding: 20px;
+  }
+  .form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .form-row label {
+    width: 60px;
+    font-weight: bold;
+  }
+  .form-row input[type="text"],
+  .form-row select {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 14px;
+    border: 1px solid #999;
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    background: #ddd;
+    border: 1px solid #999;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #ccc;
+  }
+  button:disabled {
+    background: #eee;
+    cursor: not-allowed;
+    color: #999;
+  }
+
+  #results {
+    max-width: 480px;
+    margin: 25px auto 0;
+  }
+  .movie-card {
+    display: flex;
+    gap: 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .movie-card img {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    flex: none;
+    background: #eee;
+  }
+  .movie-card .info b {
+    display: block;
+    font-size: 15px;
+  }
+  .movie-card .info span {
+    font-size: 13px;
+    color: #555;
+  }
+  .message {
+    text-align: center;
+    font-size: 16px;
+    color: #b00020;
+    margin-top: 20px;
+  }
+  .loading {
+    text-align: center;
+    color: #555;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="search-box">
+  <h2>Search:</h2>
+  <div class="form-panel">
+    <div class="form-row">
+      <label for="titleInput">Title:</label>
+      <input type="text" id="titleInput" placeholder="">
+    </div>
+    <div class="form-row">
+      <label for="typeSelect">Type:</label>
+      <select id="typeSelect">
+        <option value="movie">Movie</option>
+        <option value="series">Series</option>
+        <option value="episode">Episode</option>
+      </select>
+    </div>
+    <button id="searchBtn">Search</button>
+  </div>
+</div>
+
+<div id="results"></div>
+
+<script>
+
+const API_KEY = "YOUR_OMDB_API_KEY";
+
+const titleInput = document.getElementById('titleInput');
+const typeSelect = document.getElementById('typeSelect');
+const searchBtn = document.getElementById('searchBtn');
+const resultsEl = document.getElementById('results');
+
+searchBtn.addEventListener('click', searchMovies);
+
+async function searchMovies() {
+  const title = titleInput.value.trim();
+  const type = typeSelect.value;
+
+  resultsEl.innerHTML = '';
+
+  if (!title) {
+    resultsEl.innerHTML = '<div class="message">Введіть назву фільму</div>';
+    return;
+  }
+
+  searchBtn.disabled = true;
+  resultsEl.innerHTML = '<div class="loading">Пошук...</div>';
+
+  try {
+    const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(title)}&type=${type}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    resultsEl.innerHTML = '';
+
+    if (data.Response === "True" && Array.isArray(data.Search)) {
+      data.Search.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'movie-card';
+
+        const poster = movie.Poster && movie.Poster !== "N/A"
+          ? movie.Poster
+          : '';
+
+        card.innerHTML = `
+          ${poster ? `<img src="${poster}" alt="${movie.Title}">` : '<div style="width:60px;height:90px;background:#eee;flex:none;"></div>'}
+          <div class="info">
+            <b>${movie.Title}</b>
+            <span>Рік: ${movie.Year}</span><br>
+            <span>Тип: ${movie.Type}</span>
+          </div>
+        `;
+        resultsEl.appendChild(card);
+      });
+    } else {
+      resultsEl.innerHTML = '<div class="message">Movie not found!</div>';
+    }
+  } catch (err) {
+    resultsEl.innerHTML = '<div class="message">Помилка запиту. Спробуйте ще раз.</div>';
+  } finally {
+    searchBtn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>
